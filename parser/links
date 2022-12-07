@@ -1,3 +1,3 @@
-https://lalafo.kg/api/search/v3/feed/search?expand=url&per-page=40&category_id=5830         # a. Продажа автомобилей
-https://lalafo.kg/api/search/v3/feed/search?expand=url&per-page=40&category_id=2043         # b. Аренда квартир
-https://lalafo.kg/api/search/v3/feed/search?expand=url&per-page=40&category_id=2046         # c. Продажа квартир
+https://lalafo.kg/api/search/v3/feed/search?expand=url&per-page=40&category_id=5830         a. Продажа автомобилей .a
+https://lalafo.kg/api/search/v3/feed/search?expand=url&per-page=40&category_id=2043         a. Аренда квартир .a
+https://lalafo.kg/api/search/v3/feed/search?expand=url&per-page=40&category_id=2046         a. Продажа квартир .a
