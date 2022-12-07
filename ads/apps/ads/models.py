@@ -4,7 +4,6 @@ from django.db import models
 class Category(models.Model):
     """Модель для создания категории."""
     name = models.CharField(max_length=120, unique=True, verbose_name='Название')
-    slug = models.SlugField(max_length=120, unique=True)
 
     class Meta:
         verbose_name = 'Категория'
@@ -17,7 +16,6 @@ class Category(models.Model):
 class Ad(models.Model):
     """Модель для создания объявления."""
     title = models.CharField(max_length=120, unique=True, verbose_name='Заголовок')
-    slug = models.SlugField(max_length=120, unique=True)
     description = models.TextField(verbose_name='Описание')
     price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, verbose_name='Цена')
     city = models.CharField(max_length=60, unique=True, verbose_name='Город')

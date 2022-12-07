@@ -6,7 +6,7 @@ from .models import Category, Image, Ad
 class CategoryListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ('id', 'slug', 'name',)
+        fields = ('id', 'name')
 
 
 class ImageListSerializer(serializers.ModelSerializer):
@@ -16,11 +16,13 @@ class ImageListSerializer(serializers.ModelSerializer):
 
 
 class AdsByCategorySerializer(serializers.ModelSerializer):
-    first_image = serializers.SerializerMethodField()
-
+    category = serializers.CharField(source="category.name", read_only=True)
+    images = ImageListSerializer(many=True)
     class Meta:
         model = Ad
-        fields = ('title', 'price', 'city', 'thumbnail_link', 'phone', 'author')
+        fields = (
+            'id', 'title', 'description', 'price', 'city', 'category', 'thumbnail_link', 'images', 'phone', 'author',
+        )
 
 
 class AdDetailSerializer(serializers.ModelSerializer):
@@ -28,5 +30,5 @@ class AdDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ad
         fields = (
-            'title', 'description', 'price', 'city', 'category', 'thumbnail_link', 'images', 'phone', 'author',
+            'id', 'title', 'description', 'price', 'city', 'category', 'thumbnail_link', 'images', 'phone', 'author',
         )

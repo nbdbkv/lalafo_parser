@@ -295,5 +295,7 @@ cython_debug/
 # Poetry local configuration file - https://python-poetry.org/docs/configuration/#local-configuration
 poetry.toml
 
+# JSON
+*.json
 
 # End of https://www.toptal.com/developers/gitignore/api/linux,pycharm,python
