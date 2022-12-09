@@ -15,14 +15,11 @@ class Category(models.Model):
 
 class Ad(models.Model):
     """Модель для создания объявления."""
-    title = models.CharField(max_length=120, unique=True, verbose_name='Заголовок')
+    title = models.CharField(max_length=120, verbose_name='Заголовок')
     description = models.TextField(verbose_name='Описание')
     price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, verbose_name='Цена')
-    city = models.CharField(max_length=60, unique=True, verbose_name='Город')
-    category = models.ForeignKey(
-        to=Category, on_delete=models.CASCADE, related_name='ads',
-        verbose_name='Категория',
-    )
+    city = models.CharField(max_length=60, verbose_name='Город')
+    category = models.ForeignKey(to=Category, on_delete=models.CASCADE, related_name='ads', verbose_name='Категория')
     thumbnail_link = models.URLField(max_length=200, verbose_name='Миниатюра')
     phone = models.CharField(max_length=20, blank=True, verbose_name='Телефон')
     author = models.CharField(max_length=40, blank=True, verbose_name='Автор')
