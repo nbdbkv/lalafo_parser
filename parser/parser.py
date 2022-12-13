@@ -1,5 +1,8 @@
+import asyncio
 import json
+import time
 
+import httpx
 import requests
 
 
@@ -18,15 +21,34 @@ def get_category_data():
 
 
 def get_json_data(data):
+    start_time = time.time()
     for category_name, category_id in data.items():
         params = {
             "expand": "url",
-            'per-page': 20,
+            'per-page': 1000,
             'category_id': category_id,
         }
         response = requests.get(url, headers=headers, params=params)
         data[category_name] = response.json()
+    print(f"--- {time.time() - start_time} seconds ---")
     return data
+
+
+async def get_category(category_id):
+    async with httpx.AsyncClient() as client:
+        url = f'https://lalafo.kg/api/search/v3/feed/search?expand=url&per-page=1000&category_id={category_id}'
+        response = await client.get(url, headers=headers)
+        return response.json()
+
+
+async def get_async_json_data(data):
+    start_time = time.time()
+    tasks = []
+    for category_name, category_id in data.items():
+        tasks.append(asyncio.create_task(get_category(category_id)))
+    results = await asyncio.gather(*tasks)
+    print(f"--- {time.time() - start_time} seconds ---")
+    return dict(zip(data.keys(), results))
 
 
 def filter_json_data(json_data):
@@ -132,7 +154,8 @@ if __name__ == '__main__':
         "Accept": "application/json, text/plain, */*",
         "device": "pc"
     }
-    json_data = get_json_data(category_data)
+    # json_data = get_json_data(category_data)
+    json_data = asyncio.run(get_async_json_data(category_data))
     filtered_json_data = filter_json_data(json_data)
     create_filtered_json_file(filtered_json_data)
     post_json_to_postgres(filtered_json_data)
