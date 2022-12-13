@@ -7,6 +7,7 @@ import requests
 
 
 def get_category_data():
+    """Получает название и ID категории с файла ссылок."""
     categories = {}
     with open('links') as links_file:
         lines = links_file.readlines()
@@ -21,6 +22,10 @@ def get_category_data():
 
 
 def get_json_data(data):
+    """
+    Парсит данные с lalafo согласно ID категории
+    и записывает по ключу названию как словарь.
+    """
     start_time = time.time()
     for category_name, category_id in data.items():
         params = {
@@ -35,6 +40,7 @@ def get_json_data(data):
 
 
 async def get_category(category_id):
+    """Асинхронно парсит данные с lalafo согласно ID категории."""
     async with httpx.AsyncClient() as client:
         url = f'https://lalafo.kg/api/search/v3/feed/search?expand=url&per-page=1000&category_id={category_id}'
         response = await client.get(url, headers=headers)
@@ -42,6 +48,7 @@ async def get_category(category_id):
 
 
 async def get_async_json_data(data):
+    """Создает данные по ключу названию категории как словарь."""
     start_time = time.time()
     tasks = []
     for category_name, category_id in data.items():
@@ -52,6 +59,7 @@ async def get_async_json_data(data):
 
 
 def filter_json_data(json_data):
+    """Фильтрует необходимые поля объявлений с lalafo."""
     thumbnail_link = 'https://img5.lalafo.com/i/posters/api'
     filtered_data = {}
     filtered_items = []
@@ -92,22 +100,29 @@ def filter_json_data(json_data):
 
 
 def create_filtered_json_file(filtered_data):
+    """Создает новый фильтрованный файл."""
     with open('lalafo_data.json', 'w', encoding='UTF-8') as file:
         json.dump(filtered_data, file, indent=2, ensure_ascii=False)
 
 
 def get_category_from_db():
+    """Получает существующие категории с PostgreSQL."""
     response = requests.get("http://localhost:8000/api/categories/")
     return response.json()
 
 
 def post_category_to_db(new_category):
+    """Записывает новую категорию в PostgreSQL."""
     payload = {'name': new_category}
     response = requests.post("http://localhost:8000/api/categories/", json=payload)
     return response
 
 
 def check_category_in_db(filtered_data):
+    """
+    Проверяет категорию на наличие в PostgreSQL.
+    При отсутствии записывает.
+    """
     category_from_db = get_category_from_db()
     categories = {}
     for category in [*filtered_data]:
@@ -122,6 +137,7 @@ def check_category_in_db(filtered_data):
 
 
 def post_json_to_postgres(filtered_data):
+    """Записывает фильтрованные объявления в PostgreSQL"""
     for _ in range(1):
         check_category_in_db(filtered_data)
     categories = check_category_in_db(filtered_data)
